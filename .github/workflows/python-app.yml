@@ -47,7 +47,7 @@ jobs:
         pip install requests pyinstaller tqdm bs4
     - name: Create PyInstaller Binary
       run: |
-        pyinstaller fetcharchivetube.py --onefile
+        pyinstaller fetcharchivetube.py --onefile --icon=.\images\Icon_Win.ico
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.2
       with:
