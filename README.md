@@ -1,2 +1,6 @@
 # FetchArchiveTube
-Download YouTube videos and metadata from the Internet Archive.
+Download YouTube videos from the Internet Archive.
+[x] Videos 
+[x] Video titles
+[ ] Thumbnails
+[ ] Subtitles
