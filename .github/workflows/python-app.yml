@@ -1,0 +1,36 @@
+name: Build Pyinstaller application
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-macos:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.9
+    #due to github actions building their own python distribution, downloading and installing the official release is required for legacy macOS support
+      run: |
+        wget https://www.python.org/ftp/python/3.9.13/python-3.9.13-macosx10.9.pkg
+        sudo installer -pkg python-3.9.13-macosx10.9.pkg -target /
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        pip3 install requests pyinstaller tqdm bs4
+    - name: Create PyInstaller Binary
+      run: |
+        pyinstaller fetcharchivetube.py --onefile
+        python3 ./support/patchbinary.py
+        codesign --force --deep -s - ./dist/fetcharchivetube
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: FetchArchiveTube-macOS
+        path: ./dist/fetcharchivetube
+
