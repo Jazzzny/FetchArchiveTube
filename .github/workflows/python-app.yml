@@ -53,6 +53,25 @@ jobs:
       with:
         name: FetchArchiveTube-Windows
         path: ./dist/fetcharchivetube.exe
+  build-windows-xp:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.4.4
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.4.4"
+    - name: Install dependencies
+      run: |
+        pip install requests==2.22.0 pyinstaller==3.6 tqdm==4.54.0 bs4
+    - name: Create PyInstaller Binary
+      run: |
+        pyinstaller fetcharchivetube.py --onefile --icon=.\images\Icon_Win.ico
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: FetchArchiveTube-Windows
+        path: ./dist/fetcharchivetube.exe
   build-ubuntu:
     runs-on: ubuntu-latest
     steps:
