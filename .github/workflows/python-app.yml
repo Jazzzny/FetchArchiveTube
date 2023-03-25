@@ -63,10 +63,12 @@ jobs:
         python-version: "3.4.4"
     - name: Install dependencies
       run: |
-        pip install pefile==2019.4.18 urllib3==1.25.7 chardet==3.0.4 requests==2.22.0 pyinstaller==3.5 tqdm==4.54.0 beautifulsoup4==4.8.0 soupsieve==1.9.2 bpc-f2format
+        pip install pefile==2019.4.18 urllib3==1.25.7 chardet==3.0.4 requests==2.22.0 pyinstaller==3.5 tqdm==4.54.0 beautifulsoup4==4.8.0 soupsieve==1.9.2 future-fstrings
     - name: Create PyInstaller Binary
       run: |
-        f2format .
+        (echo # -*- coding: future_fstrings -*-) >fetcharchivetube.py.new
+        type fetcharchivetube.py >>fetcharchivetube.py.new
+        move /y fetcharchivetube.py.new fetcharchivetube.py
         pyinstaller fetcharchivetube.py --onefile --icon=.\images\Icon_Win.ico
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.2
