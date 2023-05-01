@@ -1,4 +1,4 @@
-import requests, tqdm, bs4, argparse
+import requests, progressbar, bs4, argparse
 
 parser = argparse.ArgumentParser(
     usage='%(prog)s --download-video [Video ID]',
@@ -34,14 +34,17 @@ if response.status_code == 200:
     print(f"Downloading {title}...")
     total_size = int(response.headers.get('Content-Length', 0))
     block_size = 1024
-    progress_bar = tqdm.tqdm(total=total_size, unit='iB', unit_scale=True)
+    progress_bar = progressbar.ProgressBar(maxval=total_size, widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
 
     with open(f"{title}.mp4", "wb") as f:
+        progress_bar.start()
+        downloaded_size = 0
         for data in response.iter_content(block_size):
-            progress_bar.update(len(data))
             f.write(data)
+            downloaded_size += len(data)
+            progress_bar.update(downloaded_size)
 
-    progress_bar.close()
+    progress_bar.finish()
     print("Video downloaded successfully!")
 else:
     print(f"Failed to locate video: {title} - This means that the Internet Archive does not have a copy of the requested video.")
